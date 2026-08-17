@@ -80,11 +80,15 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .rep-item{padding:6px 12px;font-size:12px;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between}
 .rep-item:hover{background:#f9fafb}
 /* LOGIN */
-.login-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--claro-dark);display:flex;align-items:center;justify-content:center;z-index:1000}
-.login-box{background:var(--claro-white);padding:30px;border-radius:8px;width:320px;text-align:center}
-.login-box h2{color:var(--claro-dark);margin-bottom:16px;font-size:18px}
-.login-box input{width:100%;padding:8px 12px;margin-bottom:10px;border:1px solid var(--claro-border);border-radius:4px;font-size:13px}
-.login-box .btn{width:100%;padding:10px}
+.login-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 30%,#1a1a2e 0%,#0d0d16 75%);display:flex;align-items:center;justify-content:center;z-index:1000}
+.login-box{background:#20202e;padding:36px 32px;border-radius:14px;width:340px;text-align:center;border:1px solid #33334a;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.login-box h2{color:#fff;margin-bottom:4px;font-size:19px;font-weight:700}
+.login-sub{color:#9ca3af;font-size:12px;margin-bottom:22px}
+.login-box label{display:block;text-align:left;font-size:11px;color:#c7c7d1;margin-bottom:5px;margin-top:14px}
+.login-box input{width:100%;padding:10px 12px;margin-bottom:0;border:1px solid #3a3a4d;border-radius:6px;font-size:13px;background:#2a2a3a;color:#fff;box-sizing:border-box}
+.login-box input::placeholder{color:#6b6b7d}
+.login-box .btn{width:100%;padding:12px;margin-top:24px;border-radius:8px;font-weight:600;font-size:14px;box-shadow:0 4px 20px rgba(218,41,28,.45);border:none}
+.login-footer{color:#7a7a8a;font-size:11px;margin-top:18px}
 .login-logo{width:50px;height:50px;background:var(--claro-red);border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px}
 /* MODAL */
 .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center}
@@ -128,10 +132,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
   <div class="login-box">
     <div class="login-logo">C</div>
     <h2>GOC — Core MPLS/ISP</h2>
-    <input type="text" id="login-user" placeholder="Usuario">
-    <input type="password" id="login-pass" placeholder="Contrasena" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-sub">Ingresa tus credenciales</div>
+    <label for="login-user">Usuario</label>
+    <input type="text" id="login-user" placeholder="tu.usuario">
+    <label for="login-pass">Contrasena</label>
+    <input type="password" id="login-pass" placeholder="********" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn btn-red" onclick="doLogin()">Ingresar</button>
-    <div id="login-err" style="color:#dc2626;font-size:11px;margin-top:8px"></div>
+    <div id="login-err" style="color:#f87171;font-size:11px;margin-top:8px"></div>
+    <div class="login-footer">2026 - ClaroVTR</div>
   </div>
 </div>
 
@@ -167,6 +175,17 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <!-- ==================== DASHBOARD ==================== -->
 <div class="view active" id="view-dashboard">
   <div class="kpi-grid" id="kpi-grid"></div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">
+      <span>Syslog - Eventos de Red</span>
+      <div style="display:flex;gap:6px">
+        <select id="syslog-horas" onchange="loadSyslog()" style="font-size:12px;padding:3px 6px;border:1px solid #d1d5db;border-radius:4px"><option value="1">Ultima 1h</option><option value="2" selected>Ultimas 2h</option><option value="4">Ultimas 4h</option><option value="8">Ultimas 8h</option><option value="24">Ultimas 24h</option></select>
+        <button class="btn-sm" onclick="loadSyslog()">Refrescar</button>
+      </div>
+    </div>
+    <div id="syslog-vendors"></div>
+    <div id="syslog-body"><div class="loading-msg">Cargando eventos...</div></div>
+  </div>
   <div class="card">
     <div class="card-title">
       <span>Anomalias activas</span>
@@ -185,17 +204,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
     <div id="alarmas-body"><div class="loading-msg"><span class="spinner"></span> Esperando primer poll...</div></div>
   </div>
   <div id="grupos-body"></div>
-  <div class="card" style="margin-top:16px">
-    <div class="card-title">
-      <span>Syslog - Eventos de Red</span>
-      <div style="display:flex;gap:6px">
-        <select id="syslog-horas" onchange="loadSyslog()" style="font-size:12px;padding:3px 6px;border:1px solid #d1d5db;border-radius:4px"><option value="1">Ultima 1h</option><option value="2" selected>Ultimas 2h</option><option value="4">Ultimas 4h</option><option value="8">Ultimas 8h</option><option value="24">Ultimas 24h</option></select>
-        <button class="btn-sm" onclick="loadSyslog()">Refrescar</button>
-      </div>
-    </div>
-    <div id="syslog-vendors"></div>
-    <div id="syslog-body"><div class="loading-msg">Cargando eventos...</div></div>
-  </div>
 </div>
 
 <!-- ==================== HISTORIAL ==================== -->
@@ -361,7 +369,7 @@ function showApp(){
   loadDashboard();
   updateClock();
   setInterval(updateClock,30000);
-  setInterval(loadDashboard,60000);
+  setInterval(loadDashboard,120000);
 }
 
 function updateClock(){
@@ -1780,5 +1788,6 @@ function scrollChatDown(){
     <button id="chat-send" onclick="sendChat()">Enviar</button>
   </div>
 </div>
+<div style="text-align:center;padding:14px 0;font-size:11px;color:#9ca3af">Desarrollado por Claudio Llanos &bull; Infraestructura Redes IP &bull; ClaroVTR</div>
 </body>
 </html>
