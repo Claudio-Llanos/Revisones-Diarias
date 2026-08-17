@@ -1,0 +1,15 @@
+services:
+  goc-trafico:
+    build: .
+    container_name: goc-trafico
+    restart: always
+    ports:
+      - "3001:5000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - FLASK_ENV=production
+      - GRAFANA_URL=https://clarochile.grafana.net
+      - GRAFANA_TOKEN=${GRAFANA_TOKEN}
+      - TRAFICO_DS_UID=bdgrcgfft4feoe
+      - TZ=America/Santiago

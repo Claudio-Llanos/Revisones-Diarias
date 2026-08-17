@@ -1,0 +1,19 @@
+# Datos runtime, caches y backups - no versionar
+data/
+
+# Llave SSH privada - NUNCA subir
+ssh/
+
+# Archivos temporales / duplicados
+*.save
+app/app_v4.py
+files.zip
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor
+.vscode/
+*.swp
+.env
