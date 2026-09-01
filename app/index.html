@@ -1262,17 +1262,26 @@ async function generarYEnviarReporte(){
   var turno=document.getElementById('chk-turno').value;
   if(!ingeniero){alert('Selecciona el ingeniero');return}
 
-  // Recopilar checks y comentarios
-  var secciones=SECCIONES_REVISION.map(function(sec){
-    var chkEl=document.getElementById('chk-'+sec.id);
-    var txtEl=document.getElementById('txt-'+sec.id);
+  // Recopilar checks y comentarios de todas las secciones
+  var todasSecciones = SECCIONES_REVISION.concat([
+    {id:"rev_equipos", label:"Equipos Caidos - NE Down"},
+    {id:"rev_enlaces", label:"Interfaces Down"},
+    {id:"rev_util95",  label:"Utilizacion >95%"},
+    {id:"rev_util0",   label:"Utilizacion 0%"},
+    {id:"rev_errores", label:"Errores/Discard"},
+    {id:"rev_cpu",     label:"CPU/Memoria"},
+    {id:"rev_drp",     label:"DRP Core"},
+  ]);
+  var secciones=todasSecciones.map(function(sec){
+    var chkEl=document.getElementById("chk-"+sec.id);
+    var txtEl=document.getElementById("txt-"+sec.id);
     return {
       id:sec.id,
       label:sec.label,
       revisado:chkEl?chkEl.checked:false,
-      comentario:txtEl?txtEl.value.trim():''
+      comentario:txtEl?txtEl.value.trim():""
     };
-  });
+  }).filter(function(s){ return s.revisado || s.comentario; });
 
   // Obtener historial del dia y alarmas activas
   var fechaFiltro=(document.getElementById('chk-fecha-filtro')||{}).value||'';
